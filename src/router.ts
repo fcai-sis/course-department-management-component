@@ -1,9 +1,11 @@
 import { Router } from "express";
 
+import courseRoutes from "./features/course/course.routes";
+
 const router: Router = Router();
 
 export default (): Router => {
-  // Add your routes here
+  courseRoutes(router);
 
   return router;
 };
