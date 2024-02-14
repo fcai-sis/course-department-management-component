@@ -2,6 +2,7 @@ import supertest from "supertest";
 
 import { database, request, expectResponseToBeError } from "../index";
 import CourseModel, { CourseType } from "../../src/features/course/data/models/course.model";
+import DepartmentModel, { DepartmentType } from "../../src/features/department/data/models/department.model";
 
 describe("GET /course", () => {
   // Connect to the database before running any tests
@@ -161,50 +162,62 @@ describe("GET /course", () => {
 
         const pageSize = 10;
 
-        const courses: CourseType[] = [
-          {
-            code: "CS100",
-            name: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            description: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            department: "CS",
-            creditHours: 3,
+        const department: DepartmentType = {
+          code: "CS",
+          name: {
+            ar: "علم الحاسوب",
+            en: "Computer Science",
           },
-          {
-            code: "CS101",
-            name: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            description: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            department: "CS",
-            creditHours: 3,
-          },
-          {
-            code: "CS102",
-            name: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            description: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            department: "CS",
-            creditHours: 3,
-          },
-        ];
+        };
+
+        let courses: CourseType[];
 
         beforeAll(async () => {
           await database.clear();
+          const departmentDoc = await DepartmentModel.create(department);
+
+          courses = [
+            {
+              code: "CS100",
+              name: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              description: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              department: departmentDoc._id,
+              creditHours: 3,
+            },
+            {
+              code: "CS101",
+              name: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              description: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              department: departmentDoc._id,
+              creditHours: 3,
+            },
+            {
+              code: "CS102",
+              name: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              description: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              department: departmentDoc._id,
+              creditHours: 3,
+            },
+          ];
+
           await CourseModel.create(courses);
           response = await request.get("/course").query({
             page: 1,
@@ -228,50 +241,63 @@ describe("GET /course", () => {
 
         const pageSize = 2;
 
-        const courses: CourseType[] = [
-          {
-            code: "CS100",
-            name: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            description: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            department: "CS",
-            creditHours: 3,
-          },
-          {
-            code: "CS101",
-            name: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            description: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            department: "CS",
-            creditHours: 3,
-          },
-          {
-            code: "CS102",
-            name: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            description: {
-              ar: "مقدمة في علم الحاسوب",
-              en: "Introduction to Computer Science",
-            },
-            department: "CS",
-            creditHours: 3,
-          },
-        ]
+        let department: DepartmentType;
+        let courses: CourseType[]
 
         beforeAll(async () => {
           await database.clear();
+
+          department = {
+            code: "CS",
+            name: {
+              ar: "علم الحاسوب",
+              en: "Computer Science",
+            },
+          };
+
+          const departmentDoc = await DepartmentModel.create(department);
+
+          courses = [
+            {
+              code: "CS100",
+              name: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              description: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              department: departmentDoc._id,
+              creditHours: 3,
+            },
+            {
+              code: "CS101",
+              name: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              description: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              department: departmentDoc._id,
+              creditHours: 3,
+            },
+            {
+              code: "CS102",
+              name: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              description: {
+                ar: "مقدمة في علم الحاسوب",
+                en: "Introduction to Computer Science",
+              },
+              department: departmentDoc._id,
+              creditHours: 3,
+            },
+          ]
 
           for (const course of courses) {
             await CourseModel.create(course);

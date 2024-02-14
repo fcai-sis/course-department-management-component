@@ -1,5 +1,6 @@
-import { departmentModelName } from "features/department/models/department.model";
 import mongoose, { InferSchemaType } from "mongoose";
+
+import { departmentModelName } from "../../../department/data/models/department.model";
 
 const courseSchema = new mongoose.Schema({
   code: {
