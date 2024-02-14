@@ -1,17 +1,20 @@
 import mongoose, { InferSchemaType } from "mongoose";
+import { courseModelName } from "./course.model";
 
 const prerequisiteSchema = new mongoose.Schema({
   courseCode: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: courseModelName,
     required: true,
   },
   prerequisiteCode: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: courseModelName,
     required: true,
   },
 });
 
-const prerequisiteModelName = "Prerequisite";
+export const prerequisiteModelName = "Prerequisite";
 
 export type PrerequisiteType = InferSchemaType<typeof prerequisiteSchema>;
 

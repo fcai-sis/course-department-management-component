@@ -1,3 +1,4 @@
+import { departmentModelName } from "features/department/models/department.model";
 import mongoose, { InferSchemaType } from "mongoose";
 
 const courseSchema = new mongoose.Schema({
@@ -27,8 +28,8 @@ const courseSchema = new mongoose.Schema({
     },
   },
   department: {
-    // TODO: ref to department
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: departmentModelName,
     required: true,
   },
   creditHours: {
@@ -37,7 +38,7 @@ const courseSchema = new mongoose.Schema({
   },
 });
 
-const courseModelName = "Course";
+export const courseModelName = "Course";
 
 export type CourseType = InferSchemaType<typeof courseSchema>;
 

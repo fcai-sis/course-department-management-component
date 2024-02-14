@@ -18,7 +18,7 @@ const departmentSchema = new mongoose.Schema({
   },
 });
 
-const departmentModelName = "Department";
+export const departmentModelName = "Department";
 
 export type DepartmentType = InferSchemaType<typeof departmentSchema>;
 
