@@ -1,60 +1,62 @@
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { Router } from "express";
+import createCourseHandler from "./logic/handlers/createCourse.handler";
+import validateCreateCourseRequestMiddleware from "./logic/middlewares/validateCreateCourseRequest.middleware";
 
 const courseRoutes = (router: Router) => {
   /*
    * Create a new course
    * */
   router.post(
-    "/course",
+    "/create",
 
     validateCreateCourseRequestMiddleware,
 
-    asyncHandler(createCourseHandler),
+    asyncHandler(createCourseHandler)
   );
 
-  /*
-   * Get all courses
-   * */
-  router.get(
-    "/course",
+  // /*
+  //  * Get all courses
+  //  * */
+  // router.get(
+  //   "/read",
 
-    asyncHandler(readCoursesHandler),
-  );
+  //   asyncHandler(readCoursesHandler)
+  // );
 
-  /*
-   * Get a course by code
-   * */
-  router.get(
-    "/course/:code",
+  // /*
+  //  * Get a course by code
+  //  * */
+  // router.get(
+  //   "/read/:code",
 
-    ensureCourseCodeInParamsMiddleware,
+  //   ensureCourseCodeInParamsMiddleware,
 
-    asyncHandler(readCourseByIdHandler),
-  );
+  //   asyncHandler(readCourseByIdHandler)
+  // );
 
-  /*
-   * Update a course by code
-   * */
-  router.patch(
-    "/course/:code",
+  // /*
+  //  * Update a course by code
+  //  * */
+  // router.patch(
+  //   "/update/:code",
 
-    ensureCourseCodeInParamsMiddleware,
-    validateUpdateCourseRequestMiddleware,
+  //   ensureCourseCodeInParamsMiddleware,
+  //   validateUpdateCourseRequestMiddleware,
 
-    asyncHandler(updateCourseHandler),
-  );
+  //   asyncHandler(updateCourseHandler)
+  // );
 
-  /*
-   * Delete a course by code
-   * */
-  router.delete(
-    "/course/:code",
+  // /*
+  //  * Delete a course by code
+  //  * */
+  // router.delete(
+  //   "/delete/:code",
 
-    ensureCourseCodeInParamsMiddleware,
+  //   ensureCourseCodeInParamsMiddleware,
 
-    asyncHandler(deleteCourseHandler),
-  );
+  //   asyncHandler(deleteCourseHandler)
+  // );
 };
 
 export default courseRoutes;
