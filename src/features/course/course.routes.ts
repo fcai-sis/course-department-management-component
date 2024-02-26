@@ -2,6 +2,14 @@ import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { Router } from "express";
 import createCourseHandler from "./logic/handlers/createCourse.handler";
 import validateCreateCourseRequestMiddleware from "./logic/middlewares/validateCreateCourseRequest.middleware";
+import readCoursesHandler from "./logic/handlers/readCourses.handler";
+import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
+import ensureCourseCodeInParamsMiddleware from "./logic/middlewares/ensureCourseCodeInParams.middleware";
+import getCourseByCodeHandler from "./logic/handlers/getCourseByCode.handler";
+import validateUpdateCourseRequestMiddleware from "./logic/middlewares/validateUpdateCourseRequest.middleware";
+import updateCourseHandler from "./logic/handlers/updateCourse.handler";
+import ensureCourseIdInParamsMiddleware from "./logic/middlewares/ensureCourseIdInParams.middleware";
+import deleteCourseHandler from "./logic/handlers/deleteCourse.handler";
 
 const courseRoutes = (router: Router) => {
   /*
@@ -15,48 +23,51 @@ const courseRoutes = (router: Router) => {
     asyncHandler(createCourseHandler)
   );
 
-  // /*
-  //  * Get all courses
-  //  * */
-  // router.get(
-  //   "/read",
+  /*
+   * Get all courses
+   * */
+  router.get(
+    "/read",
 
-  //   asyncHandler(readCoursesHandler)
-  // );
+    // Validate request query params for pagination
+    paginationQueryParamsMiddleware,
 
-  // /*
-  //  * Get a course by code
-  //  * */
-  // router.get(
-  //   "/read/:code",
+    asyncHandler(readCoursesHandler)
+  );
 
-  //   ensureCourseCodeInParamsMiddleware,
+  /*
+   * Get a course by code
+   * */
+  router.get(
+    "/read/:code",
 
-  //   asyncHandler(readCourseByIdHandler)
-  // );
+    ensureCourseCodeInParamsMiddleware,
 
-  // /*
-  //  * Update a course by code
-  //  * */
-  // router.patch(
-  //   "/update/:code",
+    asyncHandler(getCourseByCodeHandler)
+  );
 
-  //   ensureCourseCodeInParamsMiddleware,
-  //   validateUpdateCourseRequestMiddleware,
+  /*
+   * Update a course by ID
+   * */
+  router.patch(
+    "/update/:courseId",
 
-  //   asyncHandler(updateCourseHandler)
-  // );
+    ensureCourseIdInParamsMiddleware,
+    validateUpdateCourseRequestMiddleware,
 
-  // /*
-  //  * Delete a course by code
-  //  * */
-  // router.delete(
-  //   "/delete/:code",
+    asyncHandler(updateCourseHandler)
+  );
 
-  //   ensureCourseCodeInParamsMiddleware,
+  /*
+   * Delete a course by ID
+   * */
+  router.delete(
+    "/delete/:courseId",
 
-  //   asyncHandler(deleteCourseHandler)
-  // );
+    ensureCourseIdInParamsMiddleware,
+
+    asyncHandler(deleteCourseHandler)
+  );
 };
 
 export default courseRoutes;
