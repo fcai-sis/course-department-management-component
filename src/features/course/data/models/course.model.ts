@@ -3,6 +3,7 @@ import mongoose, { InferSchemaType } from "mongoose";
 import { departmentModelName } from "../../../department/data/models/department.model";
 
 const courseSchema = new mongoose.Schema({
+  // TODO: figure out the code patterns, what each part of the code means
   code: {
     type: String,
     required: true,
