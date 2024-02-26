@@ -1,12 +1,12 @@
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { Router } from "express";
 import createDepartmentHandler from "./logic/handlers/createDepartment.handler";
-import validateCreateDepartmentMiddleware from "./logic/middlewares/validateCreateDepartmentMiddleware.middleware";
+import validateCreateDepartmentMiddleware from "./logic/middlewares/validateCreateDepartment.middleware";
 import readDepartmentsHandler from "./logic/handlers/readDepartments.handler";
 import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
 import ensureDepartmentIdInParamsMiddleware from "./logic/middlewares/ensureDepartmentIdInParams.middleware";
 import getDepartmentByIdHandler from "./logic/handlers/getDepartmentById.handler";
-import validateUpdateDepartmentMiddleware from "./logic/middlewares/validateUpdateDepartmentMiddleware.middleware";
+import validateUpdateDepartmentMiddleware from "./logic/middlewares/validateUpdateDepartment.middleware";
 import updateDepartmentHandler from "./logic/handlers/updateDepartment.handler";
 import deleteDepartmentHandler from "./logic/handlers/deleteDepartment.handler";
 import getDepartmentByCodeHandler from "./logic/handlers/getDepartmentByCode.handler";
