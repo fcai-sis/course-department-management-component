@@ -1,0 +1,42 @@
+import { Request, Response } from "express";
+import CourseModel from "../../data/models/course.model";
+
+type HandlerRequest = Request<
+  {
+    courseCode: string;
+  },
+  {},
+  {}
+>;
+
+/**
+ * Find a course by its code.
+ */
+
+const handler = async (req: HandlerRequest, res: Response) => {
+  const courseCode = req.params.courseCode;
+
+  const course = await CourseModel.findOne({ code: courseCode });
+
+  if (!course) {
+    return res.status(404).json({
+      error: {
+        message: "Course not found",
+      },
+    });
+  }
+  const response = {
+    course: {
+      code: course.code,
+      name: course.name,
+      description: course.description,
+      department: course.department,
+      creditHours: course.creditHours,
+    },
+  };
+
+  return res.status(200).json(response);
+};
+
+const getCourseByCodeHandler = handler;
+export default getCourseByCodeHandler;
