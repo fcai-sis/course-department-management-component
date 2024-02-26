@@ -35,6 +35,8 @@ const courseSchema = new mongoose.Schema({
   },
   creditHours: {
     type: Number,
+    min: 1,
+    max: 4,
     required: true,
   },
 });
