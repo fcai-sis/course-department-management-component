@@ -11,6 +11,12 @@ import logger from "./core/logger";
 // Create Express server
 const app = express();
 
+// Initialize the context object
+app.use((req: Request, _: Response, next: NextFunction) => {
+  req.context = {};
+  next();
+});
+
 // Configure HTTP request logger middleware
 app.use(
   morgan("combined", {
@@ -45,13 +51,21 @@ app.use("/department", departmentRouter());
 
 // TODO: Custom 404 handler
 app.use((req: Request, res: Response, next: NextFunction) => {
-  res.status(404).json({ message: "Not found" });
+  res.status(404).json({
+    error: {
+      message: "Not found",
+    },
+  });
 });
 
 // TODO: Custom error handler
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.stack);
-  res.status(500).json({ message: "Something broke on our end" });
+  res.status(500).json({
+    error: {
+      message: "Something broke on our end",
+    },
+  });
 });
 
 export default app;
