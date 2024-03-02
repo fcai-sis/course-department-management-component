@@ -1,6 +1,5 @@
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { Router } from "express";
-import createCourseHandler from "./logic/handlers/createCourse.handler";
 import validateCreateCourseRequestMiddleware from "./logic/middlewares/validateCreateCourseRequest.middleware";
 import readCoursesHandler from "./logic/handlers/readCourses.handler";
 import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
@@ -10,6 +9,7 @@ import validateUpdateCourseRequestMiddleware from "./logic/middlewares/validateU
 import updateCourseHandler from "./logic/handlers/updateCourse.handler";
 import ensureCourseIdInParamsMiddleware from "./logic/middlewares/ensureCourseIdInParams.middleware";
 import deleteCourseHandler from "./logic/handlers/deleteCourse.handler";
+import createCourseHandler from "./logic/handlers/createCourse.handler";
 
 const courseRoutes = (router: Router) => {
   /*
