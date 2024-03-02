@@ -3,6 +3,7 @@ import mongoose, { InferSchemaType } from "mongoose";
 import { departmentModelName } from "../../../department/data/models/department.model";
 
 const courseSchema = new mongoose.Schema({
+  // TODO: figure out the code patterns, what each part of the code means
   code: {
     type: String,
     required: true,
@@ -35,6 +36,8 @@ const courseSchema = new mongoose.Schema({
   },
   creditHours: {
     type: Number,
+    min: 1,
+    max: 4,
     required: true,
   },
 });

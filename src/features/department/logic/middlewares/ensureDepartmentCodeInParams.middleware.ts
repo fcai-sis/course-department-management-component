@@ -3,18 +3,16 @@ import * as validator from "express-validator";
 
 const middlewares = [
   validator
-    .param("courseCode")
+    .param("departmentCode")
 
     .exists()
-    .withMessage("Course Code is required")
+    .withMessage("Department Code is required")
 
     .custom((value) => {
-      // Course code must follow this pattern: 2-4 uppercase letters followed by 3 digits
-      const pattern = /^[A-Z]{2,4}\d{3}$/;
+      // Department code must follow this pattern: at least 2 uppercase letters and optionally followed by numbers
+      const pattern = /^[A-Z]{2,}\d*$/; // Example : AC1 or AD05
       if (!pattern.test(value)) {
-        throw new Error(
-          "Invalid course code, must be 2-4 uppercase letters followed by 3 digits"
-        );
+        throw new Error("Invalid department code format");
       }
 
       return true;
@@ -31,11 +29,11 @@ const middlewares = [
       });
     }
 
-    req.params.courseCode = req.params.courseCode.trim();
+    req.params.departmentCode = req.params.departmentCode.trim();
 
     next();
   },
 ];
 
-const ensureCourseCodeInParamsMiddleware = middlewares;
-export default ensureCourseCodeInParamsMiddleware;
+const ensureDepartmentCodeInParamsMiddleware = middlewares;
+export default ensureDepartmentCodeInParamsMiddleware;
