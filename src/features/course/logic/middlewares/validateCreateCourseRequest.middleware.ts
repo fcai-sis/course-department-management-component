@@ -2,9 +2,8 @@ import * as validator from "express-validator";
 import { NextFunction, Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import CourseModel from "../../data/models/course.model";
-import DepartmentModel from "../../../department/data/models/department.model";
-
+import { CourseModel } from "@fcai-sis/shared-models";
+import { DepartmentModel } from "@fcai-sis/shared-models";
 /**
  * Validates the request body of the Create Course endpoint.
  */
