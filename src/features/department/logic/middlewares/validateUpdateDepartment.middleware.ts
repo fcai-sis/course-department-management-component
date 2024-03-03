@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as validator from "express-validator";
 
 import logger from "../../../../core/logger";
-import DepartmentModel from "../../data/models/department.model";
+import { DepartmentModel } from "@fcai-sis/shared-models";
 
 const middlewares = [
   validator

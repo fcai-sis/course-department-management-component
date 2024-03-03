@@ -2,7 +2,7 @@ import * as validator from "express-validator";
 import { NextFunction, Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import DepartmentModel from "../../data/models/department.model";
+import { DepartmentModel } from "@fcai-sis/shared-models";
 
 /**
  * Validates the request body of the Create Department endpoint.

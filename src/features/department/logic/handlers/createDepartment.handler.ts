@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { Request, Response } from "express";
-import DepartmentModel from "../../data/models/department.model";
+import { DepartmentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {},
