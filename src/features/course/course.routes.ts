@@ -9,6 +9,7 @@ import validateUpdateCourseRequestMiddleware from "./logic/middlewares/validateU
 import updateCourseHandler from "./logic/handlers/updateCourse.handler";
 import ensureCourseIdInParamsMiddleware from "./logic/middlewares/ensureCourseIdInParams.middleware";
 import deleteCourseHandler from "./logic/handlers/deleteCourse.handler";
+import createPrerequisiteHandler from "./logic/handlers/createPrerequisite.handler";
 import createCourseHandler from "./logic/handlers/createCourse.handler";
 
 const courseRoutes = (router: Router) => {
@@ -67,6 +68,15 @@ const courseRoutes = (router: Router) => {
     ensureCourseIdInParamsMiddleware,
 
     asyncHandler(deleteCourseHandler)
+  );
+
+  /**
+   * Create a prerequisite(s) for a course
+   */
+  router.post(
+    "/prerequisite/:courseId",
+    ensureCourseIdInParamsMiddleware,
+    asyncHandler(createPrerequisiteHandler)
   );
 };
 
