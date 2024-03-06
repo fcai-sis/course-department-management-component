@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import CourseModel from "../../data/models/course.model";
+import { CourseModel } from "@fcai-sis/shared-models";
 import mongoose from "mongoose";
 
 type HandlerRequest = Request<
