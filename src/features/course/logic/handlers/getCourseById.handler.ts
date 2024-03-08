@@ -32,6 +32,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
       description: course.description,
       department: course.department,
       creditHours: course.creditHours,
+      prerequisites: course.prerequisites,
     },
   };
 
