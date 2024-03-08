@@ -41,12 +41,15 @@ const courseSchema = new mongoose.Schema({
     max: 4,
     required: true,
   },
-  prerequisites: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: courseModelName,
-    },
-  ],
+  prerequisites: {
+    type: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: courseModelName,
+      },
+    ],
+    default: [],
+  },
 });
 
 export type CourseType = InferSchemaType<typeof courseSchema>;
