@@ -9,8 +9,10 @@ import validateUpdateCourseRequestMiddleware from "./logic/middlewares/validateU
 import updateCourseHandler from "./logic/handlers/updateCourse.handler";
 import ensureCourseIdInParamsMiddleware from "./logic/middlewares/ensureCourseIdInParams.middleware";
 import deleteCourseHandler from "./logic/handlers/deleteCourse.handler";
-import createPrerequisiteHandler from "./logic/handlers/createPrerequisite.handler";
+import createPrerequisiteHandler from "./logic/handlers/addPrerequisite.handler";
 import createCourseHandler from "./logic/handlers/createCourse.handler";
+import validateCreatePrerequisiteRequestMiddleware from "./logic/middlewares/validateCreatePrerequisite.middleware";
+import updatePrerequisitesHandler from "./logic/handlers/updatePrerequisites.handler";
 
 const courseRoutes = (router: Router) => {
   /*
@@ -40,7 +42,7 @@ const courseRoutes = (router: Router) => {
    * Get a course by code
    * */
   router.get(
-    "/read/:code",
+    "/read/:courseCode",
 
     ensureCourseCodeInParamsMiddleware,
 
@@ -71,12 +73,23 @@ const courseRoutes = (router: Router) => {
   );
 
   /**
-   * Create a prerequisite(s) for a course
+   * Add a prerequisite(s) for a course (if it doesn't already exist).
    */
   router.post(
     "/prerequisite/:courseId",
     ensureCourseIdInParamsMiddleware,
+    validateCreatePrerequisiteRequestMiddleware,
     asyncHandler(createPrerequisiteHandler)
+  );
+
+  /**
+   * Update a course's prerequisites by overwriting them
+   */
+  router.patch(
+    "/prerequisite/:courseId",
+    ensureCourseIdInParamsMiddleware,
+    validateCreatePrerequisiteRequestMiddleware,
+    asyncHandler(updatePrerequisitesHandler)
   );
 };
 
