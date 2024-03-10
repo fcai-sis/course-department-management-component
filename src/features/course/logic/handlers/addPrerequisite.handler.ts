@@ -14,7 +14,7 @@ type HandlerRequest = Request<
 >;
 
 /**
- * Create a prerequisite(s) for a course
+ * Add a prerequisite(s) for a course (if it doesn't already exist).
  */
 
 const handler = async (req: HandlerRequest, res: Response) => {
@@ -26,19 +26,6 @@ const handler = async (req: HandlerRequest, res: Response) => {
     return res.status(404).json({
       error: {
         message: "Course not found",
-      },
-    });
-  }
-
-  // check that the provided prerequisites are valid courses
-  const existingCourses = await CourseModel.find({
-    _id: { $in: prerequisites.map((id) => new mongoose.Types.ObjectId(id)) },
-  });
-
-  if (existingCourses.length !== prerequisites.length) {
-    return res.status(422).json({
-      error: {
-        message: "Invalid prerequisite(s)",
       },
     });
   }
