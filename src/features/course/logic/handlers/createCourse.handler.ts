@@ -17,6 +17,7 @@ type HandlerRequest = Request<
     };
     department: mongoose.Types.ObjectId;
     creditHours: number;
+    // TODO: handle prerequisites
   }
 >;
 
