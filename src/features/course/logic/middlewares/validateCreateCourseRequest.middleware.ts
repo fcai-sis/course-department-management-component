@@ -119,6 +119,7 @@ const validateCreateCourseRequestMiddleware = [
     }
 
     // Attach the validated data to the request body
+    // TODO: Consider using req.context to store the validated data
     req.body.code = req.body.code.trim();
     req.body.name = req.body.name;
     req.body.description = req.body.description;
