@@ -2,13 +2,12 @@ import * as validator from "express-validator";
 import { NextFunction, Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import { CourseModel } from "@fcai-sis/shared-models";
-import { DepartmentModel } from "@fcai-sis/shared-models";
-/**
- * Validates the request body of the Create Course endpoint.
- */
+import { DepartmentModel, CourseModel } from "@fcai-sis/shared-models";
 
-const middlewares = [
+/**
+ * Validates the request body of the Create course endpoint.
+ */
+const validateCreateCourseRequestMiddleware = [
   validator
     .body("code")
     .exists({ checkFalsy: true, checkNull: true })
@@ -128,5 +127,4 @@ const middlewares = [
   },
 ];
 
-const validateCreateCourseRequestMiddleware = middlewares;
 export default validateCreateCourseRequestMiddleware;
