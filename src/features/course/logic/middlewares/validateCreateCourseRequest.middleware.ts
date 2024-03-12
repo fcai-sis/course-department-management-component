@@ -28,6 +28,7 @@ const validateCreateCourseRequestMiddleware = [
     .custom(async (value) => {
       // Check if it already exists in the database
       const existingCourse = await CourseModel.findOne({ code: value });
+
       if (existingCourse !== null) {
         throw new Error("Course code already exists");
       }
@@ -52,6 +53,7 @@ const validateCreateCourseRequestMiddleware = [
       }
       return true;
     }),
+
   validator
     .body("description")
     .exists({ checkFalsy: true, checkNull: true })
@@ -91,7 +93,7 @@ const validateCreateCourseRequestMiddleware = [
     .withMessage("Course credit hours is required")
     .isNumeric()
     .withMessage("Course credit hours must be a number")
-    .isInt({ min: 1, max: 4 })
+    .isInt({ min: 1, max: 4 }) // TODO: Make sure this range is correct business-wise
     .withMessage("Course credit hours must be between 1 and 4"),
 
   (req: Request, res: Response, next: NextFunction) => {
