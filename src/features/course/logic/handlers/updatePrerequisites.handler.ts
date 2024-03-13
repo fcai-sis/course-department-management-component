@@ -19,7 +19,7 @@ type HandlerRequest = Request<
 
 const handler = async (req: HandlerRequest, res: Response) => {
   const { courseId } = req.params;
-  const { prerequisites } = req.body;
+  const { prerequisites } = req.context;
 
   const course = await CourseModel.findById(courseId);
   if (!course) {

@@ -17,7 +17,6 @@ type HandlerRequest = Request<
     };
     department: mongoose.Types.ObjectId;
     creditHours: number;
-    // TODO: handle prerequisites
   }
 >;
 
@@ -25,7 +24,7 @@ type HandlerRequest = Request<
  * Creates a course.
  * */
 const createCourseHandler = async (req: HandlerRequest, res: Response) => {
-  const { code, name, description, department, creditHours } = req.body;
+  const { code, name, description, department, creditHours } = req.context;
 
   const course = new CourseModel({
     code,

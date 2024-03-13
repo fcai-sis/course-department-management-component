@@ -111,11 +111,11 @@ const middlewares = [
     }
 
     // Attach the validated data to the request body, if it exists
-    if (req.body.code) req.body.code = req.body.code.trim();
-    if (req.body.name) req.body.name = req.body.name;
-    if (req.body.description) req.body.description = req.body.description;
-    if (req.body.department) req.body.department = req.body.department;
-    if (req.body.creditHours) req.body.creditHours = req.body.creditHours;
+    if (req.body.code) req.context.code = req.body.code.trim();
+    if (req.body.name) req.context.name = req.body.name;
+    if (req.body.description) req.context.description = req.body.description;
+    if (req.body.department) req.context.department = req.body.department;
+    if (req.body.creditHours) req.context.creditHours = req.body.creditHours;
 
     next();
   },

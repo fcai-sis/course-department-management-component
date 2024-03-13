@@ -69,8 +69,8 @@ const middlewares = [
     }
 
     // Attach the validated data to the request body, if it exists
-    if (req.body.code) req.body.code = req.body.code.trim();
-    if (req.body.name) req.body.name = req.body.name;
+    if (req.body.code) req.context.code = req.body.code.trim();
+    if (req.body.name) req.context.name = req.body.name;
 
     next();
   },

@@ -26,8 +26,8 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const department = await DepartmentModel.findByIdAndUpdate(
     departmentId,
     {
-      code: req.body.code,
-      name: req.body.name,
+      code: req.context.code,
+      name: req.context.name,
     },
     {
       new: true,
