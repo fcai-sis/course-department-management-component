@@ -9,7 +9,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    prerequisites: string[];
+    prerequisites: string[]; // TODO: figure out the correct types for this
   }
 >;
 
@@ -32,7 +32,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   // Update the course's prerequisites with the provided array of prerequisites
   course.prerequisites = prerequisites.map(
-    (prerequisite) => new mongoose.Types.ObjectId(prerequisite)
+    (prerequisite: string) => new mongoose.Types.ObjectId(prerequisite)
   );
 
   await course.save();
