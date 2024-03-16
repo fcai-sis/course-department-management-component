@@ -49,7 +49,7 @@ const middlewares = [
     }
 
     // Attach the validated data to the request body
-    req.context.prerequisites = req.body.prerequisites;
+    req.body.prerequisites = req.body.prerequisites;
 
     next();
   },

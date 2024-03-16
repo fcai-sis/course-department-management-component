@@ -19,7 +19,7 @@ type HandlerRequest = Request<
  */
 
 const handler = async (req: HandlerRequest, res: Response) => {
-  const { code, name } = req.context;
+  const { code, name } = req.body;
 
   const department = new DepartmentModel({
     code,

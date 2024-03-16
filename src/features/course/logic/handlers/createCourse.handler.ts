@@ -24,7 +24,7 @@ type HandlerRequest = Request<
  * Creates a course.
  * */
 const createCourseHandler = async (req: HandlerRequest, res: Response) => {
-  const { code, name, description, department, creditHours } = req.context;
+  const { code, name, description, department, creditHours } = req.body;
 
   const course = new CourseModel({
     code,

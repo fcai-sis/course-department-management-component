@@ -31,7 +31,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const course = await CourseModel.findByIdAndUpdate(
     courseId,
     {
-      ...req.context,
+      ...req.body,
     },
     { new: true }
   );
