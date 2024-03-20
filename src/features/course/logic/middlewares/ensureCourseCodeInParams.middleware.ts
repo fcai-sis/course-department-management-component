@@ -4,7 +4,6 @@ import * as validator from "express-validator";
 const middlewares = [
   validator
     .param("courseCode")
-
     .exists()
     .withMessage("Course Code is required")
 

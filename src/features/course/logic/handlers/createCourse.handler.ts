@@ -23,7 +23,7 @@ type HandlerRequest = Request<
 /*
  * Creates a course.
  * */
-const handler = async (req: HandlerRequest, res: Response) => {
+const createCourseHandler = async (req: HandlerRequest, res: Response) => {
   const { code, name, description, department, creditHours } = req.body;
 
   const course = new CourseModel({
@@ -50,5 +50,4 @@ const handler = async (req: HandlerRequest, res: Response) => {
   return res.status(201).json(response);
 };
 
-const createCourseHandler = handler;
 export default createCourseHandler;

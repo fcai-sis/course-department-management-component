@@ -2,13 +2,12 @@ import * as validator from "express-validator";
 import { NextFunction, Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import { CourseModel } from "@fcai-sis/shared-models";
-import { DepartmentModel } from "@fcai-sis/shared-models";
-/**
- * Validates the request body of the Create Course endpoint.
- */
+import { DepartmentModel, CourseModel } from "@fcai-sis/shared-models";
 
-const middlewares = [
+/**
+ * Validates the request body of the Create course endpoint.
+ */
+const validateCreateCourseRequestMiddleware = [
   validator
     .body("code")
     .exists({ checkFalsy: true, checkNull: true })
@@ -29,6 +28,7 @@ const middlewares = [
     .custom(async (value) => {
       // Check if it already exists in the database
       const existingCourse = await CourseModel.findOne({ code: value });
+
       if (existingCourse !== null) {
         throw new Error("Course code already exists");
       }
@@ -53,6 +53,7 @@ const middlewares = [
       }
       return true;
     }),
+
   validator
     .body("description")
     .exists({ checkFalsy: true, checkNull: true })
@@ -92,7 +93,7 @@ const middlewares = [
     .withMessage("Course credit hours is required")
     .isNumeric()
     .withMessage("Course credit hours must be a number")
-    .isInt({ min: 1, max: 4 })
+    .isInt({ min: 1, max: 4 }) // TODO: Make sure this range is correct business-wise
     .withMessage("Course credit hours must be between 1 and 4"),
 
   (req: Request, res: Response, next: NextFunction) => {
@@ -128,5 +129,4 @@ const middlewares = [
   },
 ];
 
-const validateCreateCourseRequestMiddleware = middlewares;
 export default validateCreateCourseRequestMiddleware;

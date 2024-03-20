@@ -1,15 +1,19 @@
-import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { Router } from "express";
-import validateCreateCourseRequestMiddleware from "./logic/middlewares/validateCreateCourseRequest.middleware";
+import { asyncHandler } from "@fcai-sis/shared-utilities";
+
 import readCoursesHandler from "./logic/handlers/readCourses.handler";
-import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
-import ensureCourseCodeInParamsMiddleware from "./logic/middlewares/ensureCourseCodeInParams.middleware";
-import getCourseByCodeHandler from "./logic/handlers/getCourseByCode.handler";
-import validateUpdateCourseRequestMiddleware from "./logic/middlewares/validateUpdateCourseRequest.middleware";
-import updateCourseHandler from "./logic/handlers/updateCourse.handler";
-import ensureCourseIdInParamsMiddleware from "./logic/middlewares/ensureCourseIdInParams.middleware";
-import deleteCourseHandler from "./logic/handlers/deleteCourse.handler";
 import createCourseHandler from "./logic/handlers/createCourse.handler";
+import updateCourseHandler from "./logic/handlers/updateCourse.handler";
+import deleteCourseHandler from "./logic/handlers/deleteCourse.handler";
+import getCourseByCodeHandler from "./logic/handlers/getCourseByCode.handler";
+import { paginationQueryParamsMiddleware } from "@fcai-sis/shared-middlewares";
+import createPrerequisiteHandler from "./logic/handlers/addPrerequisite.handler";
+import updatePrerequisitesHandler from "./logic/handlers/updatePrerequisites.handler";
+import ensureCourseIdInParamsMiddleware from "./logic/middlewares/ensureCourseIdInParams.middleware";
+import ensureCourseCodeInParamsMiddleware from "./logic/middlewares/ensureCourseCodeInParams.middleware";
+import validateCreateCourseRequestMiddleware from "./logic/middlewares/validateCreateCourseRequest.middleware";
+import validateUpdateCourseRequestMiddleware from "./logic/middlewares/validateUpdateCourseRequest.middleware";
+import validateCreatePrerequisiteRequestMiddleware from "./logic/middlewares/validateCreatePrerequisite.middleware";
 
 const courseRoutes = (router: Router) => {
   /*
@@ -39,7 +43,7 @@ const courseRoutes = (router: Router) => {
    * Get a course by code
    * */
   router.get(
-    "/read/:code",
+    "/read/:courseCode",
 
     ensureCourseCodeInParamsMiddleware,
 
@@ -67,6 +71,26 @@ const courseRoutes = (router: Router) => {
     ensureCourseIdInParamsMiddleware,
 
     asyncHandler(deleteCourseHandler)
+  );
+
+  /**
+   * Add a prerequisite(s) for a course (if it doesn't already exist).
+   */
+  router.post(
+    "/prerequisite/:courseId",
+    ensureCourseIdInParamsMiddleware,
+    validateCreatePrerequisiteRequestMiddleware,
+    asyncHandler(createPrerequisiteHandler)
+  );
+
+  /**
+   * Update a course's prerequisites by overwriting them
+   */
+  router.patch(
+    "/prerequisite/:courseId",
+    ensureCourseIdInParamsMiddleware,
+    validateCreatePrerequisiteRequestMiddleware,
+    asyncHandler(updatePrerequisitesHandler)
   );
 };
 
