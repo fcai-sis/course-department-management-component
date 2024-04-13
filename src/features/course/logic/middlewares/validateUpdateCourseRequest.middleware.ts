@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import * as validator from "express-validator";
 
 import logger from "../../../../core/logger";
-import { CourseModel } from "@fcai-sis/shared-models";
+import { CourseModel, CourseTypeEnum } from "@fcai-sis/shared-models";
 import { DepartmentModel } from "@fcai-sis/shared-models";
 
 const middlewares = [
@@ -67,19 +67,21 @@ const middlewares = [
     }),
 
   validator
-    .body("department")
+    .body("departments")
     .optional()
-    .isMongoId()
-    .withMessage("Course department must be a valid MongoDB ObjectId")
+    .isArray()
+    .withMessage("Departments must be an array")
     .custom(async (value) => {
-      // Ensure department exists
-      const existingDepartment = await DepartmentModel.findOne({ _id: value });
-      if (existingDepartment === null) {
-        throw new Error("Department does not exist");
+      // Check if all departments exist in the database
+      const departments = await DepartmentModel.find({
+        _id: { $in: value },
+      });
+      if (departments.length !== value.length) {
+        throw new Error("Some departments do not exist");
       }
+
       return true;
     }),
-
   validator
     .body("creditHours")
     .optional()
@@ -87,6 +89,12 @@ const middlewares = [
     .withMessage("Credit hours must be a number")
     .isInt({ min: 1, max: 4 })
     .withMessage("Course credit hours must be between 1 and 4"),
+
+  validator
+    .body("courseType")
+    .optional()
+    .isIn(Object.values(CourseTypeEnum))
+    .withMessage("Invalid course type"),
 
   (req: Request, res: Response, next: NextFunction) => {
     logger.debug(
@@ -114,7 +122,7 @@ const middlewares = [
     if (req.body.code) req.body.code = req.body.code.trim();
     if (req.body.name) req.body.name = req.body.name;
     if (req.body.description) req.body.description = req.body.description;
-    if (req.body.department) req.body.department = req.body.department;
+    if (req.body.departments) req.body.departments = req.body.departments;
     if (req.body.creditHours) req.body.creditHours = req.body.creditHours;
 
     next();

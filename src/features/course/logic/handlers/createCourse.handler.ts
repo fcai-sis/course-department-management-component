@@ -15,8 +15,9 @@ type HandlerRequest = Request<
       ar: string;
       en: string;
     };
-    department: mongoose.Types.ObjectId;
+    departments: mongoose.Types.ObjectId[];
     creditHours: number;
+    courseType: string;
   }
 >;
 
@@ -24,14 +25,16 @@ type HandlerRequest = Request<
  * Creates a course.
  * */
 const createCourseHandler = async (req: HandlerRequest, res: Response) => {
-  const { code, name, description, department, creditHours } = req.body;
+  const { code, name, description, departments, creditHours, courseType } =
+    req.body;
 
   const course = new CourseModel({
     code,
     name,
     description,
-    department: department,
+    departments,
     creditHours,
+    courseType,
   });
 
   await course.save();
@@ -42,8 +45,9 @@ const createCourseHandler = async (req: HandlerRequest, res: Response) => {
       code: course.code,
       name: course.name,
       description: course.description,
-      department: course.department,
+      department: course.departments,
       creditHours: course.creditHours,
+      courseType: course.courseType,
     },
   };
 

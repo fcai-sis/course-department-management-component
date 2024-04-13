@@ -2,7 +2,11 @@ import * as validator from "express-validator";
 import { NextFunction, Request, Response } from "express";
 
 import logger from "../../../../core/logger";
-import { DepartmentModel, CourseModel } from "@fcai-sis/shared-models";
+import {
+  DepartmentModel,
+  CourseModel,
+  CourseTypeEnum,
+} from "@fcai-sis/shared-models";
 
 /**
  * Validates the request body of the Create course endpoint.
@@ -73,17 +77,21 @@ const validateCreateCourseRequestMiddleware = [
     }),
 
   validator
-    .body("department")
+    .body("departments")
     .exists({ checkFalsy: true, checkNull: true })
-    .withMessage("Course department is required")
-    .isMongoId()
-    .withMessage("Course department must be a valid department id")
+    .withMessage("Course departments are required")
+    .isArray()
+    .withMessage("Course departments must be an array")
     .custom(async (value) => {
-      // Ensure department exists
-      const existingDepartment = await DepartmentModel.findOne({ _id: value });
-      if (existingDepartment === null) {
-        throw new Error("Department does not exist");
+      // Check if all departments exist in the database
+      const departments = await DepartmentModel.find({
+        _id: { $in: value },
+      });
+
+      if (departments.length !== value.length) {
+        throw new Error("One or more departments do not exist");
       }
+
       return true;
     }),
 
@@ -95,6 +103,13 @@ const validateCreateCourseRequestMiddleware = [
     .withMessage("Course credit hours must be a number")
     .isInt({ min: 1, max: 4 }) // TODO: Make sure this range is correct business-wise
     .withMessage("Course credit hours must be between 1 and 4"),
+
+  validator
+    .body("courseType")
+    .exists({ checkFalsy: true, checkNull: true })
+    .withMessage("Course type is required")
+    .isIn(Object.values(CourseTypeEnum))
+    .withMessage("Course type is invalid"),
 
   (req: Request, res: Response, next: NextFunction) => {
     logger.debug(
@@ -122,7 +137,7 @@ const validateCreateCourseRequestMiddleware = [
     req.body.code = req.body.code.trim();
     req.body.name = req.body.name;
     req.body.description = req.body.description;
-    req.body.department = req.body.department;
+    req.body.departments = req.body.departments;
     req.body.creditHours = req.body.creditHours;
 
     next();
