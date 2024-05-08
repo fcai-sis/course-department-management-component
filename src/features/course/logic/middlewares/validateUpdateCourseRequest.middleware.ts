@@ -93,7 +93,7 @@ const middlewares = [
   validator
     .body("courseType")
     .optional()
-    .isIn(Object.values(CourseTypeEnum))
+    .isIn(CourseTypeEnum)
     .withMessage("Invalid course type"),
 
   (req: Request, res: Response, next: NextFunction) => {
