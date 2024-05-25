@@ -108,7 +108,7 @@ const validateCreateCourseRequestMiddleware = [
     .body("courseType")
     .exists({ checkFalsy: true, checkNull: true })
     .withMessage("Course type is required")
-    .isIn(CourseTypeEnum)
+    .isIn(Object.values(CourseTypeEnum))
     .withMessage("Course type is invalid"),
 
   (req: Request, res: Response, next: NextFunction) => {
