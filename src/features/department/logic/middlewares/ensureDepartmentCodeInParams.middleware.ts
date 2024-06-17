@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as validator from "express-validator";
 
-const middlewares = [
+const ensureDepartmentCodeInParamsMiddleware = [
   validator
     .param("departmentCode")
 
@@ -35,5 +35,4 @@ const middlewares = [
   },
 ];
 
-const ensureDepartmentCodeInParamsMiddleware = middlewares;
 export default ensureDepartmentCodeInParamsMiddleware;

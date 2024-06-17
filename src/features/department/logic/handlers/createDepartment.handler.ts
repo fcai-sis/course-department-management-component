@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import { Request, Response } from "express";
 import { DepartmentModel } from "@fcai-sis/shared-models";
 
@@ -17,8 +16,7 @@ type HandlerRequest = Request<
 /**
  * Create a department.
  */
-
-const handler = async (req: HandlerRequest, res: Response) => {
+const createDepartmentHandler = async (req: HandlerRequest, res: Response) => {
   const { code, name } = req.body;
 
   const department = new DepartmentModel({
@@ -28,16 +26,13 @@ const handler = async (req: HandlerRequest, res: Response) => {
 
   await department.save();
 
-  const response = {
+  return res.status(201).json({
     message: "Department created successfully",
     department: {
       code: department.code,
       name: department.name,
     },
-  };
-
-  return res.status(201).json(response);
+  });
 };
 
-const createDepartmentHandler = handler;
 export default createDepartmentHandler;

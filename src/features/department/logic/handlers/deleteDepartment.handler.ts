@@ -3,17 +3,18 @@ import { Request, Response } from "express";
 import { DepartmentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<{
-  departmentId: string;
+  departmentCode: string;
 }>;
 
 /**
  * Delete a department by its ID.
  */
+const deleteDepartmentHandler = async (req: HandlerRequest, res: Response) => {
+  const departmentCode = req.params.departmentCode;
 
-const handler = async (req: HandlerRequest, res: Response) => {
-  const departmentId = req.params.departmentId;
-
-  const department = await DepartmentModel.findByIdAndDelete(departmentId);
+  const department = await DepartmentModel.findOneAndDelete({
+    code: departmentCode,
+  });
   if (!department) {
     return res.status(404).json({
       error: {
@@ -31,5 +32,4 @@ const handler = async (req: HandlerRequest, res: Response) => {
   return res.status(200).json(response);
 };
 
-const deleteDepartmentHandler = handler;
 export default deleteDepartmentHandler;

@@ -4,7 +4,7 @@ import { DepartmentModel } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {
-    departmentId: string;
+    departmentCode: string;
   },
   {},
   {
@@ -17,14 +17,13 @@ type HandlerRequest = Request<
 >;
 
 /**
- * Update a department by its ID.
+ * Update a department by its code.
  */
+const updateDepartmentHandler = async (req: HandlerRequest, res: Response) => {
+  const departmentCode = req.params.departmentCode;
 
-const handler = async (req: HandlerRequest, res: Response) => {
-  const departmentId = req.params.departmentId;
-
-  const department = await DepartmentModel.findByIdAndUpdate(
-    departmentId,
+  const department = await DepartmentModel.findOneAndUpdate(
+    { code: departmentCode },
     {
       code: req.body.code,
       name: req.body.name,
@@ -50,5 +49,4 @@ const handler = async (req: HandlerRequest, res: Response) => {
   return res.status(200).json(response);
 };
 
-const updateDepartmentHandler = handler;
 export default updateDepartmentHandler;

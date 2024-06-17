@@ -17,7 +17,7 @@ const departmentRoutes = (router: Router) => {
    * Create a new department
    * */
   router.post(
-    "/create",
+    "/",
 
     validateCreateDepartmentMiddleware,
 
@@ -29,7 +29,7 @@ const departmentRoutes = (router: Router) => {
    *
    */
   router.get(
-    "/read",
+    "/",
 
     // Validate request query params for pagination
     paginationQueryParamsMiddleware,
@@ -40,20 +40,20 @@ const departmentRoutes = (router: Router) => {
   /**
    * Read a department by its ID
    */
-  router.get(
-    "/readByID/:departmentId",
+  // router.get(
+  //   "/:departmentId",
 
-    // Ensure the department ID is in the request params
-    ensureDepartmentIdInParamsMiddleware,
+  //   // Ensure the department ID is in the request params
+  //   ensureDepartmentIdInParamsMiddleware,
 
-    asyncHandler(getDepartmentByIdHandler)
-  );
+  //   asyncHandler(getDepartmentByIdHandler)
+  // );
 
   /**
    * Read a department by its code
    */
   router.get(
-    "/read/:departmentCode",
+    "/:departmentCode",
 
     // Ensure the department code is in the request params
     ensureDepartmentCodeInParamsMiddleware,
@@ -65,10 +65,10 @@ const departmentRoutes = (router: Router) => {
    * Update a department by its ID
    */
   router.patch(
-    "/update/:departmentId",
+    "/:departmentCode",
 
     // Ensure the department ID is in the request params
-    ensureDepartmentIdInParamsMiddleware,
+    ensureDepartmentCodeInParamsMiddleware,
 
     // Validate the request body
     validateUpdateDepartmentMiddleware,
@@ -80,10 +80,10 @@ const departmentRoutes = (router: Router) => {
    * Delete a department by its ID
    */
   router.delete(
-    "/delete/:departmentId",
+    "/:departmentCode",
 
     // Ensure the department ID is in the request params
-    ensureDepartmentIdInParamsMiddleware,
+    ensureDepartmentCodeInParamsMiddleware,
 
     asyncHandler(deleteDepartmentHandler)
   );

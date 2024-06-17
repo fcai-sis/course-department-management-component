@@ -8,7 +8,7 @@ type HandlerRequest = Request;
  * Reads all departments.
  */
 
-const handler = async (req: HandlerRequest, res: Response) => {
+const readDepartmentsHandler = async (req: HandlerRequest, res: Response) => {
   // get the pagination parameters
   const page = req.context.page;
   const pageSize = req.context.pageSize;
@@ -17,15 +17,12 @@ const handler = async (req: HandlerRequest, res: Response) => {
     .skip((page - 1) * pageSize)
     .limit(pageSize);
 
-  const response = {
+  return res.status(200).json({
     departments: departments.map((department) => ({
       code: department.code,
       name: department.name,
     })),
-  };
-
-  return res.status(200).json(response);
+  });
 };
 
-const readDepartmentsHandler = handler;
 export default readDepartmentsHandler;
