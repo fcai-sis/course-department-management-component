@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import { CourseModel } from "@fcai-sis/shared-models";
-import mongoose from "mongoose";
+import mongoose, { Schema, SchemaType } from "mongoose";
 
 type HandlerRequest = Request<
   {
@@ -33,7 +33,7 @@ const handler = async (req: HandlerRequest, res: Response) => {
   // check that the provided prerequisites aren't already in the course's prerequisites
   const existingPrerequisites = course.prerequisites;
   if (
-    existingPrerequisites.some((prerequisite) =>
+    existingPrerequisites.some((prerequisite: Schema.Types.ObjectId) =>
       prerequisites.includes(prerequisite.toString())
     )
   ) {
