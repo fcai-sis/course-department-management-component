@@ -7,7 +7,7 @@ type HandlerRequest = Request<{
 }>;
 
 /**
- * Delete a department by its ID.
+ * Delete a department by its code.
  */
 const deleteDepartmentHandler = async (req: HandlerRequest, res: Response) => {
   const departmentCode = req.params.departmentCode;
