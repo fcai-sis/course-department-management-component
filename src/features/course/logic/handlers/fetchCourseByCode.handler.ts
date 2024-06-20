@@ -3,6 +3,7 @@ import {
   CourseDepartmentModel,
   CourseModel,
   CoursePrerequisiteModel,
+  DepartmentModel,
 } from "@fcai-sis/shared-models";
 import { CourseCode } from "../../data/types";
 
@@ -34,7 +35,7 @@ const fetchCourseByCodeHandler = async (req: HandlerRequest, res: Response) => {
     },
     {
       $lookup: {
-        from: "departments",
+        from: DepartmentModel.collection.name,
         localField: "courseDepartments.department",
         foreignField: "_id",
         as: "department",
