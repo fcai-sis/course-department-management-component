@@ -1,15 +1,11 @@
 import { Request, Response } from "express";
-import { DepartmentModel } from "@fcai-sis/shared-models";
+import { DepartmentModel, DepartmentType } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    code: string;
-    name: {
-      ar: string;
-      en: string;
-    };
+    department: DepartmentType;
   }
 >;
 
@@ -17,20 +13,33 @@ type HandlerRequest = Request<
  * Create a department.
  */
 const createDepartmentHandler = async (req: HandlerRequest, res: Response) => {
-  const { code, name } = req.body;
+  const { department } = req.body;
 
-  const department = new DepartmentModel({
-    code,
-    name,
+  const existingDepartment = await DepartmentModel.findOne({
+    code: department.code,
   });
 
-  await department.save();
+  if (existingDepartment) {
+    return res.status(400).json({
+      error: {
+        message: "Department already exists",
+      },
+    });
+  }
+
+  const createdDepartment = await DepartmentModel.create<DepartmentType>({
+    code: department.code,
+    name: department.name,
+    capacity: department.capacity,
+    program: department.program,
+  });
 
   return res.status(201).json({
     message: "Department created successfully",
     department: {
-      code: department.code,
-      name: department.name,
+      ...createdDepartment.toJSON(),
+      _id: undefined,
+      __v: undefined,
     },
   });
 };

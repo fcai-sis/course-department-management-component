@@ -10,12 +10,11 @@ type HandlerRequest = Request<{
  * Delete a department by its code.
  */
 const deleteDepartmentHandler = async (req: HandlerRequest, res: Response) => {
-  const departmentCode = req.params.departmentCode;
-
-  const department = await DepartmentModel.findOneAndDelete({
-    code: departmentCode,
+  const deletedDepartment = await DepartmentModel.findOneAndDelete({
+    code: req.params.departmentCode,
   });
-  if (!department) {
+
+  if (!deletedDepartment) {
     return res.status(404).json({
       error: {
         message: "Department not found",
@@ -25,8 +24,8 @@ const deleteDepartmentHandler = async (req: HandlerRequest, res: Response) => {
   const response = {
     message: "Department deleted successfully",
     department: {
-      code: department.code,
-      name: department.name,
+      code: deletedDepartment.code,
+      name: deletedDepartment.name,
     },
   };
   return res.status(200).json(response);

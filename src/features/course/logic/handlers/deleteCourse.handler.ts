@@ -1,38 +1,35 @@
 import { Request, Response } from "express";
 import { CourseModel } from "@fcai-sis/shared-models";
+import { CourseCode } from "features/course/data/types";
 
 type HandlerRequest = Request<{
-  courseId: string;
+  courseCode: CourseCode;
 }>;
+
 /**
  * Delete a course.
  */
+const deleteCourseHandler = async (req: HandlerRequest, res: Response) => {
+  const deletedCourse = await CourseModel.findOneAndDelete({
+    code: req.params.courseCode,
+  });
 
-const handler = async (req: HandlerRequest, res: Response) => {
-  const courseId = req.params.courseId;
-
-  const course = await CourseModel.findByIdAndDelete(courseId);
-  if (!course) {
+  if (!deletedCourse) {
     return res.status(404).json({
       error: {
         message: "Course not found",
       },
     });
   }
-  const response = {
+
+  return res.status(204).json({
     message: "Course deleted successfully",
     course: {
-      code: course.code,
-      name: course.name,
-      description: course.description,
-      department: course.departments,
-      creditHours: course.creditHours,
-      prerequisites: course.prerequisites,
+      ...deletedCourse.toJSON(),
+      _id: undefined,
+      __v: undefined,
     },
-  };
-  return res.status(200).json(response);
+  });
 };
-
-const deleteCourseHandler = handler;
 
 export default deleteCourseHandler;

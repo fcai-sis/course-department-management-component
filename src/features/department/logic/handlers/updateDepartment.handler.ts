@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 
-import { DepartmentModel } from "@fcai-sis/shared-models";
+import { DepartmentModel, DepartmentType } from "@fcai-sis/shared-models";
 
 type HandlerRequest = Request<
   {
@@ -8,11 +8,7 @@ type HandlerRequest = Request<
   },
   {},
   {
-    code?: string;
-    name?: {
-      ar: string;
-      en: string;
-    };
+    department: Partial<Omit<DepartmentType, "code">>;
   }
 >;
 
@@ -20,33 +16,45 @@ type HandlerRequest = Request<
  * Update a department by its code.
  */
 const updateDepartmentHandler = async (req: HandlerRequest, res: Response) => {
-  const departmentCode = req.params.departmentCode;
+  const { department } = req.body;
 
-  const department = await DepartmentModel.findOneAndUpdate(
-    { code: departmentCode },
-    {
-      code: req.body.code,
-      name: req.body.name,
-    },
-    {
-      new: true,
-    }
-  );
-  if (!department) {
+  const updatedDepartment = await DepartmentModel.findOne({
+    code: req.params.departmentCode,
+  });
+
+  if (!updatedDepartment) {
     return res.status(404).json({
       error: {
         message: "Department not found",
       },
     });
   }
-  const response = {
+
+  if (department.name) {
+    updatedDepartment.name = {
+      ...updatedDepartment.name,
+      ...department.name,
+    };
+  }
+
+  if (department.capacity) {
+    updatedDepartment.capacity = department.capacity;
+  }
+
+  if (department.program) {
+    updatedDepartment.program = department.program;
+  }
+
+  await updatedDepartment.save();
+
+  res.status(200).json({
     message: "Department updated successfully",
     department: {
-      code: department.code,
-      name: department.name,
+      ...updatedDepartment.toJSON(),
+      _id: undefined,
+      __v: undefined,
     },
-  };
-  return res.status(200).json(response);
+  });
 };
 
 export default updateDepartmentHandler;

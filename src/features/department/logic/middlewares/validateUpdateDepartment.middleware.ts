@@ -1,80 +1,64 @@
-import { Request, Response, NextFunction } from "express";
 import * as validator from "express-validator";
+import { validateRequestMiddleware } from "@fcai-sis/shared-middlewares";
+import { ProgramEnum } from "@fcai-sis/shared-models";
 
-import logger from "../../../../core/logger";
-import { DepartmentModel } from "@fcai-sis/shared-models";
-
-const middlewares = [
+/**
+ * Validates the request body of the update Department endpoint.
+ */
+const validateUpdateDepartmentRequestMiddleware = [
   validator
-    .body("code")
-    .optional()
-    .isString()
-    .withMessage("Department code must be a string")
-    .custom((value) => {
-      // Department code must follow this pattern: at least 2 uppercase letters and optionally followed by numbers
-      const pattern = /^[A-Z]{2,}\d*$/; // Example : AC1 or AD05
-      if (!pattern.test(value)) {
-        throw new Error("Invalid department code format");
-      }
+    .body("department")
 
-      return true;
-    })
-    .custom(async (value) => {
-      // Check if it already exists in the database
-      const existingDepartment = await DepartmentModel.findOne({ code: value });
-      if (existingDepartment !== null) {
-        throw new Error("Department code already exists");
-      }
+    .exists()
+    .withMessage("Department is required")
 
-      return true;
-    }),
-
-  validator
-    .body("name")
-    .optional()
     .isObject()
-    .withMessage("Department name must be an object")
-    .custom((value) => {
-      if (!value.en || !value.ar) {
-        throw new Error(
-          "Department name must contain English and Arabic properties"
-        );
-      }
-      if (typeof value.en !== "string" || typeof value.ar !== "string") {
-        throw new Error("Department name properties must be strings");
-      }
-      return true;
-    }),
+    .withMessage("Department must be an object"),
 
-  (req: Request, res: Response, next: NextFunction) => {
-    logger.debug(
-      `Validating update department req body: ${JSON.stringify(req.body)}`
-    );
+  validator
+    .body("department.name")
 
-    // If any of the validations above failed, return an error response
-    const errors = validator.validationResult(req);
+    .optional()
 
-    if (!errors.isEmpty()) {
-      logger.debug(
-        `Validation failed for update department req body: ${JSON.stringify(
-          req.body
-        )}`
-      );
+    .isObject()
+    .withMessage("Department name must be an object"),
 
-      return res.status(400).json({
-        error: {
-          message: errors.array()[0].msg,
-        },
-      });
-    }
+  validator
+    .body("department.name.en")
 
-    // Attach the validated data to the request body, if it exists
-    if (req.body.code) req.body.code = req.body.code.trim();
-    if (req.body.name) req.body.name = req.body.name;
+    .optional()
 
-    next();
-  },
+    .isString()
+    .withMessage("Department name in English must be a string"),
+
+  validator
+    .body("department.name.ar")
+
+    .optional()
+
+    .isString()
+    .withMessage("Department name in Arabic must be a string"),
+
+  validator
+    .body("department.capacity")
+
+    .optional()
+
+    .isInt()
+    .withMessage("Department capacity must be a number"),
+
+  validator
+    .body("department.program")
+
+    .optional()
+
+    .isString()
+    .withMessage("Department program must be a string")
+
+    .isIn(ProgramEnum)
+    .withMessage(`Department program must be one of ${ProgramEnum.join(", ")}`),
+
+  validateRequestMiddleware,
 ];
 
-const validateUpdateDepartmentMiddleware = middlewares;
-export default validateUpdateDepartmentMiddleware;
+export default validateUpdateDepartmentRequestMiddleware;

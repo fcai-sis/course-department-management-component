@@ -1,57 +1,114 @@
-import mongoose from "mongoose";
 import { Request, Response } from "express";
-import { CourseModel } from "@fcai-sis/shared-models";
+import {
+  CourseDepartmentModel,
+  CourseModel,
+  CoursePrerequisiteModel,
+  CourseType,
+  DepartmentModel,
+} from "@fcai-sis/shared-models";
+import { CourseCode, DepartmentCode } from "features/course/data/types";
 
 type HandlerRequest = Request<
   {},
   {},
   {
-    code: string;
-    name: {
-      ar: string;
-      en: string;
-    };
-    description: {
-      ar: string;
-      en: string;
-    };
-    departments: mongoose.Types.ObjectId[];
-    creditHours: number;
-    courseType: string;
+    course: CourseType;
+    departments: DepartmentCode[];
+    prerequisites: CourseCode[];
   }
 >;
 
-/*
+/**
  * Creates a course.
- * */
+ */
 const createCourseHandler = async (req: HandlerRequest, res: Response) => {
-  const { code, name, description, departments, creditHours, courseType } =
-    req.body;
+  const { course, departments, prerequisites } = req.body;
 
-  const course = new CourseModel({
-    code,
-    name,
-    description,
-    departments,
-    creditHours,
-    courseType,
+  const fetchedDepartments = await DepartmentModel.find({
+    code: { $in: departments },
   });
 
-  await course.save();
+  const nonExistentDepartments = departments.filter(
+    (department) =>
+      !fetchedDepartments.find(
+        (fetchedDepartment) => fetchedDepartment.code === department
+      )
+  );
 
-  const response = {
+  if (nonExistentDepartments.length) {
+    return res.status(400).json({
+      message: "Some departments do not exist",
+      departments: nonExistentDepartments,
+    });
+  }
+
+  const fetchedPrerequisites = await CourseModel.find({
+    code: { $in: prerequisites },
+  });
+
+  const nonExistentPrerequisites = prerequisites.filter(
+    (prerequisite) =>
+      !fetchedPrerequisites.find(
+        (fetchedPrerequisite) => fetchedPrerequisite.code === prerequisite
+      )
+  );
+
+  if (nonExistentPrerequisites.length) {
+    return res.status(400).json({
+      message: "Some prerequisites do not exist",
+      prerequisites: nonExistentPrerequisites,
+    });
+  }
+
+  const existingCourse = await CourseModel.findOne({ code: course.code });
+  if (existingCourse) {
+    return res.status(400).json({
+      message: "Course with the same code already exists",
+    });
+  }
+
+  const createdCourse = await CourseModel.create<CourseType>({
+    code: course.code,
+    courseType: course.courseType,
+    creditHours: course.creditHours,
+    description: course.description,
+    name: course.name,
+  });
+
+  await CourseDepartmentModel.insertMany(
+    fetchedDepartments.map((fetchedDepartment) => ({
+      department: fetchedDepartment._id,
+      course: createdCourse._id,
+    }))
+  );
+
+  await CoursePrerequisiteModel.insertMany(
+    fetchedPrerequisites.map((fetchedPrerequisite) => ({
+      prerequisite: fetchedPrerequisite._id,
+      course: createdCourse._id,
+    }))
+  );
+
+  return res.status(201).json({
     message: "Course created successfully",
     course: {
-      code: course.code,
-      name: course.name,
-      description: course.description,
-      department: course.departments,
-      creditHours: course.creditHours,
-      courseType: course.courseType,
-    },
-  };
+      ...createdCourse.toJSON(),
 
-  return res.status(201).json(response);
+      departments: fetchedDepartments.map((fetchedDepartment) => ({
+        ...fetchedDepartment.toJSON(),
+        _id: undefined,
+        __v: undefined,
+      })),
+      prerequisites: fetchedPrerequisites.map((fetchedPrerequisite) => ({
+        ...fetchedPrerequisite.toJSON(),
+        _id: undefined,
+        __v: undefined,
+      })),
+
+      _id: undefined,
+      __v: undefined,
+    },
+  });
 };
 
 export default createCourseHandler;
