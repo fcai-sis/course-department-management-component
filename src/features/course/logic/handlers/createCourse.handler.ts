@@ -12,9 +12,10 @@ type HandlerRequest = Request<
   {},
   {},
   {
-    course: CourseType;
-    departments: DepartmentCode[];
-    prerequisites: CourseCode[];
+    course: CourseType & {
+      departments: DepartmentCode[];
+      prerequisites: CourseCode[];
+    };
   }
 >;
 
@@ -22,7 +23,10 @@ type HandlerRequest = Request<
  * Creates a course.
  */
 const createCourseHandler = async (req: HandlerRequest, res: Response) => {
-  const { course, departments, prerequisites } = req.body;
+  const {
+    course: { departments, prerequisites },
+    course,
+  } = req.body;
 
   const fetchedDepartments = await DepartmentModel.find({
     code: { $in: departments },
