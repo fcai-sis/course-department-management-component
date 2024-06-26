@@ -17,6 +17,14 @@ type HandlerRequest = Request;
 const fetchPaginatedCoursesHandler = [
   paginate.middleware(),
   asyncHandler(async (req: HandlerRequest, res: Response) => {
+    const totalCourses = await CourseModel.countDocuments(
+      {},
+      {
+        skip: req.skip ?? 0,
+        limit: req.query.limit as unknown as number,
+      }
+    );
+
     const courses = await CourseModel.aggregate([
       {
         $lookup: {
@@ -124,7 +132,10 @@ const fetchPaginatedCoursesHandler = [
       },
     ]);
 
-    return res.status(200).json({ courses });
+    return res.status(200).json({
+      courses,
+      totalCourses,
+    });
   }),
 ];
 

@@ -115,7 +115,7 @@ const fetchCourseByCodeHandler = async (req: HandlerRequest, res: Response) => {
   ]);
 
   return res.status(200).json({
-    course,
+    course: course[0],
   });
 };
 
