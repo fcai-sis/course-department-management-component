@@ -12,7 +12,7 @@ import ensureCourseCodeInParamsMiddleware from "./logic/middlewares/ensureCourse
 import validateCreateCourseRequestMiddleware from "./logic/middlewares/validateCreateCourseRequest.middleware";
 import validateUpdateCourseRequestMiddleware from "./logic/middlewares/validateUpdateCourseRequest.middleware";
 import validateCreatePrerequisiteRequestMiddleware from "./logic/middlewares/validateCreatePrerequisite.middleware";
-
+import paginate from "express-paginate";
 const courseRoutes = (router: Router) => {
   /*
    * Create a new course
@@ -26,7 +26,11 @@ const courseRoutes = (router: Router) => {
   /*
    * Get all courses
    * */
-  router.get("/", fetchPaginatedCoursesHandler);
+  router.get(
+    "/",
+    paginate.middleware(),
+    asyncHandler(fetchPaginatedCoursesHandler)
+  );
 
   /*
    * Get a course by code

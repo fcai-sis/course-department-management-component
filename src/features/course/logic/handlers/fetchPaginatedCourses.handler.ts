@@ -6,137 +6,138 @@ import {
   CoursePrerequisiteModel,
   DepartmentModel,
 } from "@fcai-sis/shared-models";
-import { asyncHandler } from "@fcai-sis/shared-utilities";
-import paginate from "express-paginate";
 
-type HandlerRequest = Request;
+type HandlerRequest = Request<
+  {},
+  {},
+  {},
+  {
+    skip?: number;
+    limit?: number;
+  }
+>;
 
 /**
  * Get all courses.
  */
-const fetchPaginatedCoursesHandler = [
-  paginate.middleware(),
-  asyncHandler(async (req: HandlerRequest, res: Response) => {
-    const totalCourses = await CourseModel.countDocuments(
-      {},
-      {
-        skip: req.skip ?? 0,
-        limit: req.query.limit as unknown as number,
-      }
-    );
+const fetchPaginatedCoursesHandler = async (
+  req: HandlerRequest,
+  res: Response
+) => {
+  const { skip, limit } = req.query;
 
-    const courses = await CourseModel.aggregate([
-      {
-        $lookup: {
-          from: CourseDepartmentModel.collection.name,
-          localField: "_id",
-          foreignField: "course",
-          as: "courseDepartments",
-        },
+  const courses = await CourseModel.aggregate([
+    // if skip and limit are provided, use them
+    {
+      $skip: skip ? parseInt(skip as unknown as string) : 0,
+    },
+    ...(limit ? [{ $limit: limit }] : []),
+    {
+      $lookup: {
+        from: CourseDepartmentModel.collection.name,
+        localField: "_id",
+        foreignField: "course",
+        as: "courseDepartments",
       },
-      {
-        $unwind: {
-          path: "$courseDepartments",
-          preserveNullAndEmptyArrays: true,
-        },
+    },
+    {
+      $unwind: {
+        path: "$courseDepartments",
+        preserveNullAndEmptyArrays: true,
       },
-      {
-        $lookup: {
-          from: DepartmentModel.collection.name,
-          localField: "courseDepartments.department",
-          foreignField: "_id",
-          as: "department",
-        },
+    },
+    {
+      $lookup: {
+        from: DepartmentModel.collection.name,
+        localField: "courseDepartments.department",
+        foreignField: "_id",
+        as: "department",
       },
-      {
-        $unwind: {
-          path: "$department",
-          preserveNullAndEmptyArrays: true,
-        },
+    },
+    {
+      $unwind: {
+        path: "$department",
+        preserveNullAndEmptyArrays: true,
       },
-      {
-        $group: {
-          _id: "$_id",
-          code: { $first: "$code" },
-          name: { $first: "$name" },
-          description: { $first: "$description" },
-          creditHours: { $first: "$creditHours" },
-          departments: { $push: "$department" },
-        },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        code: { $first: "$code" },
+        name: { $first: "$name" },
+        description: { $first: "$description" },
+        creditHours: { $first: "$creditHours" },
+        departments: { $push: "$department" },
       },
-      {
-        $lookup: {
-          from: CoursePrerequisiteModel.collection.name,
-          localField: "_id",
-          foreignField: "course",
-          as: "coursePrerequisites",
-        },
+    },
+    {
+      $lookup: {
+        from: CoursePrerequisiteModel.collection.name,
+        localField: "_id",
+        foreignField: "course",
+        as: "coursePrerequisites",
       },
-      {
-        $unwind: {
-          path: "$coursePrerequisites",
-          preserveNullAndEmptyArrays: true,
-        },
+    },
+    {
+      $unwind: {
+        path: "$coursePrerequisites",
+        preserveNullAndEmptyArrays: true,
       },
-      {
-        $lookup: {
-          from: CourseModel.collection.name,
-          localField: "coursePrerequisites.prerequisite",
-          foreignField: "_id",
-          as: "prerequisite",
-        },
+    },
+    {
+      $lookup: {
+        from: CourseModel.collection.name,
+        localField: "coursePrerequisites.prerequisite",
+        foreignField: "_id",
+        as: "prerequisite",
       },
-      {
-        $unwind: {
-          path: "$prerequisite",
-          preserveNullAndEmptyArrays: true,
-        },
+    },
+    {
+      $unwind: {
+        path: "$prerequisite",
+        preserveNullAndEmptyArrays: true,
       },
-      {
-        $group: {
-          _id: "$_id",
-          code: { $first: "$code" },
-          name: { $first: "$name" },
-          description: { $first: "$description" },
-          creditHours: { $first: "$creditHours" },
-          departments: { $first: "$departments" },
-          prerequisites: { $push: "$prerequisite.code" },
-        },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        code: { $first: "$code" },
+        name: { $first: "$name" },
+        description: { $first: "$description" },
+        creditHours: { $first: "$creditHours" },
+        departments: { $first: "$departments" },
+        prerequisites: { $push: "$prerequisite.code" },
       },
-      {
-        $project: {
-          _id: 0,
+    },
+    {
+      $project: {
+        _id: 0,
+        code: 1,
+        name: 1,
+        description: 1,
+        creditHours: 1,
+        departments: {
           code: 1,
           name: 1,
-          description: 1,
-          creditHours: 1,
-          departments: {
-            code: 1,
-            name: 1,
-            capacity: 1,
-            program: 1,
-          },
-          prerequisites: 1,
+          capacity: 1,
+          program: 1,
         },
+        prerequisites: 1,
       },
-      {
-        $sort: {
-          code: 1,
-        },
+    },
+    {
+      $sort: {
+        code: 1,
       },
-      {
-        $skip: req.skip ?? 0,
-      },
-      {
-        $limit: req.query.limit as unknown as number,
-      },
-    ]);
+    },
+  ]);
 
-    return res.status(200).json({
-      courses,
-      totalCourses,
-    });
-  }),
-];
+  const totalCourses = await CourseModel.countDocuments({});
+
+  return res.status(200).json({
+    courses,
+    totalCourses,
+  });
+};
 
 export default fetchPaginatedCoursesHandler;
