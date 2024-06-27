@@ -14,6 +14,7 @@ type HandlerRequest = Request<
   {
     skip?: number;
     limit?: number;
+    department?: string;
   }
 >;
 
@@ -24,7 +25,13 @@ const fetchPaginatedCoursesHandler = async (
   req: HandlerRequest,
   res: Response
 ) => {
-  const { skip, limit } = req.query;
+  const { skip, limit, department } = req.query;
+
+  const departmentQuery = department
+    ? await DepartmentModel.findOne({
+        code: department,
+      })
+    : null;
 
   const courses = await CourseModel.aggregate([
     // if skip and limit are provided, use them
@@ -44,6 +51,11 @@ const fetchPaginatedCoursesHandler = async (
       $unwind: {
         path: "$courseDepartments",
         preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $match: {
+        "courseDepartments.department": departmentQuery._id,
       },
     },
     {
