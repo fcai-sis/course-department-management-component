@@ -36,7 +36,7 @@ const fetchPaginatedCoursesHandler = async (
   const courses = await CourseModel.aggregate([
     // if skip and limit are provided, use them
     {
-      $skip: skip ? parseInt(skip as unknown as string) : 0,
+      $skip: skip ? parseInt(skip as unknown as string) : 0, // TODO: something ain't right about this
     },
     ...(limit ? [{ $limit: limit }] : []),
     {
@@ -53,11 +53,16 @@ const fetchPaginatedCoursesHandler = async (
         preserveNullAndEmptyArrays: true,
       },
     },
-    {
-      $match: {
-        "courseDepartments.department": departmentQuery._id,
-      },
-    },
+    // if department is provided, filter by department
+    ...(departmentQuery
+      ? [
+          {
+            $match: {
+              "courseDepartments.department": departmentQuery._id,
+            },
+          },
+        ]
+      : []),
     {
       $lookup: {
         from: DepartmentModel.collection.name,
