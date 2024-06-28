@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 
 import paginate from "express-paginate";
-import { DepartmentModel } from "@fcai-sis/shared-models";
+import { DepartmentModel, ProgramEnum } from "@fcai-sis/shared-models";
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 
 type HandlerRequest = Request;
@@ -12,7 +12,9 @@ type HandlerRequest = Request;
 const readDepartmentsHandler = [
   paginate.middleware(),
   asyncHandler(async (req: HandlerRequest, res: Response) => {
-    const departments = await DepartmentModel.find()
+    const departments = await DepartmentModel.find({
+      program: { $in: [ProgramEnum[1], ProgramEnum[2]] },
+    })
       .skip(req.skip ?? 0)
       .limit(req.query.limit as unknown as number);
 
