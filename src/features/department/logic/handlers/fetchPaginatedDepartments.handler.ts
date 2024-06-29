@@ -19,7 +19,6 @@ const readDepartmentsHandler = [
     return res.status(200).json({
       departments: departments.map((department) => ({
         ...department.toJSON(),
-        _id: undefined,
         __v: undefined,
       })),
     });
