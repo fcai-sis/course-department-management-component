@@ -12,9 +12,7 @@ type HandlerRequest = Request;
 const readDepartmentsHandler = [
   paginate.middleware(),
   asyncHandler(async (req: HandlerRequest, res: Response) => {
-    const departments = await DepartmentModel.find({
-      program: { $in: [ProgramEnum[1], ProgramEnum[2]] },
-    })
+    const departments = await DepartmentModel.find({})
       .skip(req.skip ?? 0)
       .limit(req.query.limit as unknown as number);
 
