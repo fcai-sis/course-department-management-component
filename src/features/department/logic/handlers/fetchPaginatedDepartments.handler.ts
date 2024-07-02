@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 
 import paginate from "express-paginate";
-import { DepartmentModel, ProgramEnum } from "@fcai-sis/shared-models";
+import {
+  DepartmentModel,
+  departmentLocalizedFields,
+} from "@fcai-sis/shared-models";
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 
 type HandlerRequest = Request;
@@ -21,6 +24,7 @@ const readDepartmentsHandler = [
         ...department.toJSON(),
         __v: undefined,
       })),
+      departmentLocalizedFields,
     });
   }),
 ];
