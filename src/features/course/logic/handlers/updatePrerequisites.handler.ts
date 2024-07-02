@@ -24,9 +24,11 @@ const handler = async (req: HandlerRequest, res: Response) => {
   const course = await CourseModel.findById(courseId);
   if (!course) {
     return res.status(404).json({
-      error: {
-        message: "Course not found",
-      },
+      errors: [
+        {
+          message: "Course not found",
+        },
+      ],
     });
   }
 

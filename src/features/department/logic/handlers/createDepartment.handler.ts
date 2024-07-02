@@ -21,9 +21,11 @@ const createDepartmentHandler = async (req: HandlerRequest, res: Response) => {
 
   if (existingDepartment) {
     return res.status(400).json({
-      error: {
-        message: "Department already exists",
-      },
+      errors: [
+        {
+          message: "Department already exists",
+        },
+      ],
     });
   }
 

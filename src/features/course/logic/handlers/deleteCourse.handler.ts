@@ -16,9 +16,11 @@ const deleteCourseHandler = async (req: HandlerRequest, res: Response) => {
 
   if (!deletedCourse) {
     return res.status(404).json({
-      error: {
-        message: "Course not found",
-      },
+      errors: [
+        {
+          message: "Course not found",
+        },
+      ],
     });
   }
 

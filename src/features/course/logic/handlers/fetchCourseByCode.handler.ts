@@ -114,6 +114,16 @@ const fetchCourseByCodeHandler = async (req: HandlerRequest, res: Response) => {
     },
   ]);
 
+  if (!course.length) {
+    return res.status(404).json({
+      errors: [
+        {
+          message: "Course not found",
+        },
+      ],
+    });
+  }
+
   return res.status(200).json({
     course: course[0],
   });

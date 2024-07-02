@@ -36,9 +36,11 @@ const updateCourseHandler = async (req: HandlerRequest, res: Response) => {
 
   if (!updatedCourse) {
     return res.status(404).json({
-      error: {
-        message: "Course not found",
-      },
+      errors: [
+        {
+          message: "Course not found",
+        },
+      ],
     });
   }
 
@@ -61,8 +63,12 @@ const updateCourseHandler = async (req: HandlerRequest, res: Response) => {
 
     if (nonExistentDepartments.length) {
       return res.status(400).json({
-        message: "Some departments do not exist",
-        departments: nonExistentDepartments,
+        errors: [
+          {
+            message: "Some departments do not exist",
+            departments: nonExistentDepartments,
+          },
+        ],
       });
     }
 
@@ -98,8 +104,12 @@ const updateCourseHandler = async (req: HandlerRequest, res: Response) => {
 
     if (nonExistentPrerequisites.length) {
       return res.status(400).json({
-        message: "Some prerequisites do not exist",
-        prerequisites: nonExistentPrerequisites,
+        errors: [
+          {
+            message: "Some prerequisites do not exist",
+            prerequisites: nonExistentPrerequisites,
+          },
+        ],
       });
     }
 

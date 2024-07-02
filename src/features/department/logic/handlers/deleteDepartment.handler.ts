@@ -16,9 +16,11 @@ const deleteDepartmentHandler = async (req: HandlerRequest, res: Response) => {
 
   if (!deletedDepartment) {
     return res.status(404).json({
-      error: {
-        message: "Department not found",
-      },
+      errors: [
+        {
+          message: "Department not found",
+        },
+      ],
     });
   }
   const response = {

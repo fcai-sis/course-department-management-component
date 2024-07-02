@@ -41,8 +41,12 @@ const createCourseHandler = async (req: HandlerRequest, res: Response) => {
 
   if (nonExistentDepartments.length) {
     return res.status(400).json({
-      message: "Some departments do not exist",
-      departments: nonExistentDepartments,
+      errors: [
+        {
+          message: "Some departments do not exist",
+          departments: nonExistentDepartments,
+        },
+      ],
     });
   }
 
@@ -59,15 +63,23 @@ const createCourseHandler = async (req: HandlerRequest, res: Response) => {
 
   if (nonExistentPrerequisites.length) {
     return res.status(400).json({
-      message: "Some prerequisites do not exist",
-      prerequisites: nonExistentPrerequisites,
+      errors: [
+        {
+          message: "Some prerequisites do not exist",
+          prerequisites: nonExistentPrerequisites,
+        },
+      ],
     });
   }
 
   const existingCourse = await CourseModel.findOne({ code: course.code });
   if (existingCourse) {
     return res.status(400).json({
-      message: "Course with the same code already exists",
+      errors: [
+        {
+          message: "Course with the same code already exists",
+        },
+      ],
     });
   }
 

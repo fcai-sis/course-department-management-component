@@ -19,9 +19,11 @@ const getDepartmentByCodeHandler = async (
 
   if (!department) {
     return res.status(404).json({
-      error: {
-        message: "Department not found",
-      },
+      errors: [
+        {
+          message: "Department not found",
+        },
+      ],
     });
   }
 
