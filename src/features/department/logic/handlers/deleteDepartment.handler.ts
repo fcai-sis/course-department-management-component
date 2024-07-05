@@ -30,7 +30,7 @@ const deleteDepartmentHandler = async (req: HandlerRequest, res: Response) => {
       name: deletedDepartment.name,
     },
   };
-  return res.status(200).json(response);
+  return res.status(204).json(response);
 };
 
 export default deleteDepartmentHandler;

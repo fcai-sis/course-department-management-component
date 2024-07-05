@@ -93,7 +93,7 @@ const fetchCourseByCodeHandler = async (req: HandlerRequest, res: Response) => {
         description: { $first: "$description" },
         creditHours: { $first: "$creditHours" },
         departments: { $first: "$departments" },
-        prerequisites: { $push: "$prerequisite.code" },
+        prerequisites: { $push: "$prerequisite" },
       },
     },
     {

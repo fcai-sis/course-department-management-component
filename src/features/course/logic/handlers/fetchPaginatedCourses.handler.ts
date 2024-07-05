@@ -123,7 +123,7 @@ const fetchPaginatedCoursesHandler = async (
         description: { $first: "$description" },
         creditHours: { $first: "$creditHours" },
         departments: { $first: "$departments" },
-        prerequisites: { $push: "$prerequisite.code" },
+        prerequisites: { $push: "$prerequisite" },
       },
     },
     {
