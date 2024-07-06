@@ -36,7 +36,7 @@ const fetchPaginatedCoursesHandler = async (
   const courses = await CourseModel.aggregate([
     // if skip and limit are provided, use them
     {
-      $skip: skip ? parseInt(skip as unknown as string) : 0, // TODO: something ain't right about this
+      $skip: req.skip ?? 0,
     },
     ...(limit ? [{ $limit: limit }] : []),
     {
@@ -153,7 +153,7 @@ const fetchPaginatedCoursesHandler = async (
 
   return res.status(200).json({
     courses,
-    totalCourses,
+    total: totalCourses,
   });
 };
 
