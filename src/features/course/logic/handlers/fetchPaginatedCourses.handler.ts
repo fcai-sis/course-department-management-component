@@ -12,7 +12,6 @@ type HandlerRequest = Request<
   {},
   {},
   {
-    skip?: number;
     limit?: number;
     department?: string;
   }
@@ -25,7 +24,7 @@ const fetchPaginatedCoursesHandler = async (
   req: HandlerRequest,
   res: Response
 ) => {
-  const { skip, limit, department } = req.query;
+  const { limit, department } = req.query;
 
   const departmentQuery = department
     ? await DepartmentModel.findOne({

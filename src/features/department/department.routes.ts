@@ -1,3 +1,4 @@
+import paginate from "express-paginate";
 import { asyncHandler } from "@fcai-sis/shared-utilities";
 import { Router } from "express";
 import createDepartmentHandler from "./logic/handlers/createDepartment.handler";
@@ -20,7 +21,12 @@ const departmentRoutes = (router: Router) => {
   );
 
   // Read all departments
-  router.get("/", fetchPagiantedDepartmentsHandler);
+  router.get(
+    "/",
+    paginate.middleware(),
+    asyncHandler(fetchPagiantedDepartmentsHandler)
+  );
+  router.get("/all", asyncHandler(fetchPagiantedDepartmentsHandler));
 
   // Read a department by its code
   router.get(

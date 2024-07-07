@@ -32,6 +32,8 @@ const courseRoutes = (router: Router) => {
     asyncHandler(fetchPaginatedCoursesHandler)
   );
 
+  router.get("/all", asyncHandler(fetchPaginatedCoursesHandler));
+
   /*
    * Get a course by code
    * */
