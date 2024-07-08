@@ -53,6 +53,7 @@ const fetchCourseByCodeHandler = async (req: HandlerRequest, res: Response) => {
         code: { $first: "$code" },
         name: { $first: "$name" },
         description: { $first: "$description" },
+        courseType: { $first: "$courseType" },
         creditHours: { $first: "$creditHours" },
         departments: { $push: "$department" },
       },
@@ -92,6 +93,7 @@ const fetchCourseByCodeHandler = async (req: HandlerRequest, res: Response) => {
         name: { $first: "$name" },
         description: { $first: "$description" },
         creditHours: { $first: "$creditHours" },
+        courseType: { $first: "$courseType" },
         departments: { $first: "$departments" },
         prerequisites: { $push: "$prerequisite" },
       },
@@ -103,6 +105,7 @@ const fetchCourseByCodeHandler = async (req: HandlerRequest, res: Response) => {
         name: 1,
         description: 1,
         creditHours: 1,
+        courseType: 1,
         departments: {
           code: 1,
           name: 1,
